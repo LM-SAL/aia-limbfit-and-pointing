@@ -19,12 +19,14 @@ log and sends one failure email containing its tail.
 Runtime values live in `config.pl`. `config.csh` only bootstraps an interactive
 JSOC C-shell.
 
-The fitter targets data 22 hours behind the invocation time. The hourly cron is
-safe: the driver silently skips hours that do not map to the 00/03/06/... data
-grid, so cron email is reserved for real failures:
+The fitter targets data 22 hours behind the invocation time, so any minute of
+the hour selects the same slot. The hourly cron is safe: the driver silently
+skips hours that do not map to the 00/03/06/... data grid, so cron email is
+reserved for real failures. Minute 30 keeps the publish step after the legacy
+pipeline that still writes the same series around :50 past the hour:
 
 ```cron
-1 * * * * /homef/nabil/Git/aia_limbfit_and_pointing/cron_submit_slot.pl
+30 * * * * /homef/nabil/Git/aia_limbfit_and_pointing/cron_submit_slot.pl
 ```
 
 A dead cron sends no failure email, so an independent, read-only check watches
